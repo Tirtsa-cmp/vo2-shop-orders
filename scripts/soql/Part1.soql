@@ -1,0 +1,207 @@
+////Query 1
+//SELECT Name
+//FROM Account
+//WHERE Name LIKE 'ELEVE%'
+//ORDER BY Name ASC; 
+
+////Query2
+//SELECT Name, StartingDay__c, client__r.Name, Room__c
+//FROM Workshop__c
+//WHERE Status__c = 'Planned' AND Name LIKE 'ELEVE%'
+//ORDER BY StartingDay__c ASC
+
+// //Query3
+// Select client__r.Name, Requister__r.Name,TotalCostLines__c,
+// (SELECT Lecturer__r.Name, Cost__c FROM WorkshopLines__r)
+// From Workshop__c 
+// Where Name = 'ELEVE-ELW-1020'
+
+// // === Query Results
+// // client__r.Name       Requister__r.Name  TotalCostLines__c  WorkshopLines__r.Lecturer__r.Name  WorkshopLines__r.Cost__c
+// // ───────────────────  ─────────────────  ─────────────────  ─────────────────────────────────  ────────────────────────
+// // ELEVE Maison Elowen  Inès Marchal       2750               Marc Duhamel                       1800                    
+// //                                                            Léa Benamou                        950     
+ 
+// // Query4
+// Select Lecturer__r.Name, Cost__c
+// From WorkshopLine__c 
+// Where cost__c >= 500
+
+
+// // === Query Results
+// // Lecturer__r.Name  Cost__c
+// // ────────────────  ───────
+// // Marc Duhamel      1800   
+// // Léa Benamou       950    
+// // Yael Costa        600    
+// // Marc Duhamel      1600   
+// // Léa Benamou       900    
+
+// // Query complete with 5 records returned
+
+// // // Query5
+// SELECT Workshop__r.Name,cost__c
+// FROM WorkshopLine__c
+// WHERE 	Workshop__r.Name = 'ELEVE-W-REM' AND Lecturer__r.Name =null
+
+
+// // === Query Results
+// // Workshop__r.Name  Cost__c
+// // ────────────────  ───────
+// // ELEVE-W-REM       450    
+
+// // Query complete with 1 records returned
+
+// // // Query6
+// SELECT Name
+// FROM Account
+// WHERE Name LIKE 'ELEVE%'AND Id NOT IN (SELECT client__c FROM Workshop__c where client__c != null )
+
+
+// // === Query Results
+// // Name              
+// // ──────────────────
+// // ELEVE Atelier Nova
+
+// // Query complete with 1 records returned
+
+// // // Query7
+// SELECT Name
+// FROM Workshop__c 
+// WHERE NAME LIKE 'ELEVE%' AND Id NOT IN (SELECT Workshop__c FROM WorkshopLine__c)
+
+// // === Query Results
+// // Name      
+// // ──────────
+// // ELEVE-VIDE
+
+// // // Query complete with 1 records returned
+
+// // // Query8
+// SELECT COUNT(Id), status__c
+// FROM Workshop__c
+// WHERE Name LIKE 'ELEVE%'
+// GROUP BY status__c
+
+
+// // === Query Results
+// // expr0  Status__c
+// // ─────  ─────────
+// // 1      Confirmed
+// // 3      Planned  
+// // 1      Done     
+
+// // Query complete with 3 records returned
+
+// //  Query9
+// SELECT ContactSkillsToContact__r.Name,ContactSkillsToSkill__r.Name , Level__c
+// FROM ContactSkills__c
+// WHERE level__c= 'Expert'
+
+
+// // === Query Results
+// // ContactSkillsToContact__r.Name  ContactSkillsToSkill__r.Name  Level__c
+// // ──────────────────────────────  ────────────────────────────  ────────
+// // Marc Duhamel                    Facilitation                  Expert  
+// // Léa Benamou                     Workshop Design               Expert  
+
+// // Query complete with 2 records returned
+
+// // // Query10
+// SELECT Name, status__c, TotalCostLines__c
+// FROM Workshop__c
+// WHERE Name LIKE 'ELEVE%' AND  client__r.BillingCity = 'Paris' 
+// ORDER by TotalCostLines__c DESC
+
+
+// // === Query Results
+// // Name            Status__c  TotalCostLines__c
+// // ──────────────  ─────────  ─────────────────
+// // ELEVE-ELW-1020  Confirmed  2750             
+// // ELEVE-SRN-0908  Done       2500             
+// // ELEVE-W-REM     Planned    1010             
+// // ELEVE-VIDE      Planned    0                
+
+// // // Query complete with 4 records returned
+
+
+// // // Query11
+// SELECT Workshop__r.Name, cost__c, Workshop__r.status__c, Workshop__r.client__r.BillingCity
+// FROM WorkshopLine__c
+// WHERE cost__c >=1000 
+
+
+// // === Query Results
+// // Workshop__r.Name  Workshop__r.Status__c  Workshop__r.client__r.BillingCity  Cost__c
+// // ────────────────  ─────────────────────  ─────────────────────────────────  ───────
+// // ELEVE-ELW-1020    Confirmed              Paris                              1800   
+// // ELEVE-SRN-0908    Done                   Paris                              1600   
+
+// // Query complete with 2 records returned
+
+// // // Query12
+// SELECT Name, (SELECT Name, Cost__c FROM WorkshopLines__r WHERE Cost__c >= 1000)
+// FROM Workshop__c
+// WHERE Name LIKE 'ELEVE%'
+
+
+// // === Query Results
+// // Name            WorkshopLines__r.Name  WorkshopLines__r.Cost__c
+// // ──────────────  ─────────────────────  ────────────────────────
+// // ELEVE-ELW-1020  a01d20000280ICN        1800                    
+// // ELEVE-LMX-1103                                                 
+// // ELEVE-SRN-0908  a01d20000280ICQ        1600                    
+// // ELEVE-W-REM                                                    
+// // ELEVE-VIDE                                                     
+
+// // Query complete with 5 records returned
+
+// // // // Query13
+// SELECT NAME, (SELECT LastName FROM Contacts), (SELECT Name, status__c FROM Workshops__r)
+// FROM Account 
+// WHERE Name LIKE 'ELEVE%'
+
+
+// // === Query Results
+// // Name                    Contacts.LastName  Workshops__r.Name  Workshops__r.Status__c
+// // ──────────────────────  ─────────────────  ─────────────────  ──────────────────────
+// // ELEVE Maison Elowen     Marchal            ELEVE-W-REM        Planned               
+// //                                            ELEVE-ELW-1020     Confirmed             
+// // ELEVE Comptoir Lémieux  Sernin             ELEVE-LMX-1103     Planned               
+// // ELEVE Galerie Serein    Adler              ELEVE-VIDE         Planned               
+// //                                            ELEVE-SRN-0908     Done                  
+// // ELEVE Atelier Nova      Costa                                                       
+// //                         Benamou                                                     
+// //                         Duhamel                                                     
+
+// // Query complete with 4 records returned
+
+// // // // Query14
+// // SELECT Name
+// // FROM Contact 
+// // WHERE Id IN (SELECT requister__c FROM Workshop__c WHERE Name LIKE 'ELEVE%')
+
+
+// // // === Query Results
+// // // Name        
+// // // ────────────
+// // // Inès Marchal
+// // // Paul Sernin 
+// // // Chloé Adler 
+
+// // // Query complete with 3 records returned
+
+// // // // Query15
+// SELECT Name
+// FROM Contact 
+// WHERE Account.Name LIKE 'ELEVE%' AND Id NOT IN (SELECT Lecturer__c FROM WorkshopLine__c WHERE Lecturer__c != null AND Workshop__r.Name LIKE 'ELEVE%')
+
+
+// // === Query Results
+// // Name        
+// // ────────────
+// // Inès Marchal
+// // Paul Sernin 
+// // Chloé Adler 
+
+// // Query complete with 3 records returned
